@@ -1,6 +1,6 @@
 ##
 ## EPITECH PROJECT, 2019
-## makefile
+## my_printf
 ## File description:
 ## makefile
 ##
@@ -8,6 +8,7 @@
 #COMMANDS
 MAKE_CLEAN		=	make clean
 MAKE_FCLEAN		=	make fclean
+RM				=	rm -rf
 
 #COLOR
 RED				=	\e[31m
@@ -25,40 +26,45 @@ LIB				=	-sC lib/my
 #TEXT
 COMPILE			=	$$'$(BOLD)$(GREEN)[ Compiled the project ! ]\t$(DEFAULT)'
 RE_COMPILE		=	$$'$(BOLD)$(GREEN)[ Recompiled the project ! ]\t$(DEFAULT)'
-CLEAN			=	$$'$(BOLD)$(RED)[ Removing object files in [$(LIB_DIR)]... ]\t$(DEFAULT)'
+TEST_RUN		= 	$$'$(BOLD)$(GREEN)[ Running Test ...]$(DEFAULT)'
+CLEAN			=	$$'$(BOLD)$(RED)[ Removing object files in [$(LIB_DIR)]... }\t$(DEFAULT)'
 FCLEAN			=	$$'$(BOLD)$(RED)[ Removing binary... ]\t$(DEFAULT)'
 FILES_REMOVED	=   $$'$(BOLD)$(RED)[ Removing object files in [$(SRC_DIR)]... ]$(DEFAULT)'
 
 #COMPILE TOOLS
+LIFLAGS			=	-I $(INC_DIR) -L $(LIB_DIR) -lmy
+CRITERION		=	--coverage -lcriterion
+LDFLAGS			=	-Wall -Wextra -Werror -std=c99
+USELESS			=	$(shell find . -type f -name "*~" -o -name "*.gcda" -o -name "*.gcno")
 
 SRC				=	$(shell find $(SRC_DIR) -name '*.c')
 
+TESTS			=	$(shell find ./tests -name '*.c')
+
 OBJS			=	$(SRC:.c=.o)
 
-LIFLAGS			=	-I $(INC_DIR) -L $(LIB_DIR) -lmy
-
-LDFLAGS			=	-Wall -Wextra -Werror -std=c99
-
-NAME			=	mysh
+NAME			=	binary
 
 all:	$(NAME)
 
 $(NAME):	$(OBJS)
-		@make $(LIB)
-		@gcc -o $(NAME) $(OBJS) $(LIFLAGS) $(LDFLAGS) -g
+		@gcc -o $(NAME) $(OBJS) $(LDFLAGS)
 		@echo $(COMPILE)
 
 %.o: %.c
-	@gcc -o $@ -c $< -g3
+		@gcc -o $@ -c $< -g
+
+tests_run:
+		@gcc -o unit_tests $(SRC) $(TESTS) $(CRITERION)
+		@./unit_tests
+		@echo $(TEST_RUN)
 
 clean:
-		@$(MAKE_CLEAN) $(LIB)
-		@$(RM) $(OBJS)
+		@$(RM) $(OBJS) $(USELESS)
 		@echo $(FILES_REMOVED)
 
 fclean: clean
-		@$(MAKE_FCLEAN) $(LIB)
-		@$(RM) $(NAME)
+		@$(RM) $(NAME) unit_tests
 		@echo $(FCLEAN)
 
 re:	fclean all
