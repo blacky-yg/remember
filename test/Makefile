@@ -35,7 +35,7 @@ FILES_REMOVED	=   $$'$(BOLD)$(RED)[ Removing object files in [$(SRC_DIR)]... ]$(
 LIFLAGS			=	-I $(INC_DIR) -L $(LIB_DIR) -lmy
 CRITERION		=	--coverage -lcriterion
 LDFLAGS			=	-Wall -Wextra -Werror -std=c99
-USELESS			=	$(shell find . -type f -name "*~" -o -name "*.gcda" -o -name "*.gcno")
+USELESS			=	$(shell find . -type f -name "*~" -o -name "*.gcda" -o -name "*.gcno" -o -name "\#*\#")
 
 SRC				=	$(shell find $(SRC_DIR) -name '*.c')
 
